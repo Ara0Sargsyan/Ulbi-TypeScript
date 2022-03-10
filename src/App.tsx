@@ -1,50 +1,34 @@
-import React, {useEffect, useState} from 'react';
-import Card, {CardVariant} from "./components/Card";
-import {ITodo, IUser} from "./types/types";
-import axios from "axios";
-import List from "./components/List";
-import UserItem from "./components/UserItem";
-import TodoItem from "./components/TodoItem";
-import EventsexEmple from "./components/EventsExample";
+import React from 'react';
+import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
+import UsersPage from "./components/UsersPage";
+import TodosPage from "./components/TodosPage";
+import UserItemPage from "./components/UserItemPage";
+import TodosItemPage from "./components/TodosItemPage";
+
 
 const App = () => {
-    const [users, setUsers] = useState<IUser[]>([])
-    const [todos, setTodos] = useState<ITodo[]>([])
-
-    useEffect(() => {
-        fetchParams()
-        fetchTodos()
-    }, [])
-
-    async function fetchParams() {
-        try {
-            const response = await axios.get<IUser[]>('https://jsonplaceholder.typicode.com/users')
-            setUsers(response.data)
-        } catch (e) {
-            alert(e)
-        }
-    }
-
-    async function fetchTodos() {
-        try {
-            const response = await axios.get<ITodo[]>('https://jsonplaceholder.typicode.com/todos?_limit=10')
-            setTodos(response.data)
-        } catch (e) {
-            alert(e)
-        }
-    }
-
     return (
-        <div>
-            <EventsexEmple/>
-            <Card onClick={() => console.log("click")} variant={CardVariant.autlined} width={"200px"} height={"200px"}>
-                <button onClick={() => console.log("button")}>
-                    knopka
-                </button>
-            </Card>
-            <List items={users} renderItem={(user: IUser) => <UserItem key={user.id} user={user} /> }/>
-            <List items={todos} renderItem={(todo: ITodo) => <TodoItem key={todo.id} todo={todo} /> }/>
-        </div>
+        <BrowserRouter>
+            <div>
+                <div style={{
+                    display: "flex",
+                    height: 50,
+                    backgroundColor: "green",
+                    fontSize: "1.3em",
+                    alignItems: "center",
+                    justifyContent: "space-around"
+                }} >
+                    <Link style={{textDecoration: "none"}} to="/users">User</Link>
+                    <Link style={{textDecoration: "none"}} to="/todos">Todos</Link>
+                </div>
+                <Routes>
+                    <Route path="/users" element={<UsersPage/>}/>
+                    <Route path="/todos" element={<TodosPage/>}/>
+                    <Route path="/users/:id" element={<UserItemPage/>}/>
+                    <Route path="/todos/:id" element={<TodosItemPage/>}/>
+                </Routes>
+            </div>
+        </BrowserRouter>
     )
 }
 
